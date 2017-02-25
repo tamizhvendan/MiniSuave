@@ -2,11 +2,8 @@
 open MiniSuave
 
 let hello = 
-  Path "/hello" (GET (OK "Hello headers"))
-  |> SetHeader "Content-Type" "text/plain"
+  GET >=> Path "/hello" >=> OK "hello" >=> SetHeader "X-My-Header" "foo"
 
-let hi =
-  Path "/hi" (GET (OK "Hi"))
+let hi = POST >=> Path "/hi" >=> OK "hello POST"
 
-let myApp = 
-  Choose [hi; hello]
+let myApp = Choose[hello; hi]

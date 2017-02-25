@@ -10,7 +10,8 @@ type HttpResponse = {
   StatusCode : StatusCode
 }
 
-let response statusCode content (req : HttpRequest) = async {
+type Handler = HttpRequest -> Async<HttpResponse option>
+let response statusCode content (req : HttpRequest)  = async {
   return Some {Content = content; StatusCode = statusCode}
 }
 
@@ -27,7 +28,7 @@ let GET = httpMethodFilter Get
 let POST = httpMethodFilter Post  
 let PUT = httpMethodFilter Put 
   
-let execute app req = 
+let execute (app : Handler) req = 
   let res = app req |> Async.RunSynchronously
   match res with
   | Some r -> printfn "%A" r

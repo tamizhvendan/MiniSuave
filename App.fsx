@@ -2,6 +2,6 @@
 open MiniSuave
 
 (* I'd like to set MimeType *)
-let myApp = (OK "Hello PUT")
+let myApp = GET (OK "Hello PUT")
 
 // http://bit.ly/fs_value_restriction

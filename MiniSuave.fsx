@@ -17,11 +17,9 @@ let response statusCode content (req : HttpRequest) = async {
 let OK = response Ok
 let NOT_FOUND = response NotFound
 let INTERNAL_ERROR = response InternalError
-let httpMethodFilter httpMethod (app : Async<HttpResponse>) request = async {
+let httpMethodFilter httpMethod app request : Async<HttpResponse option> = async {
   match request.HttpMethod = httpMethod with
-  | true -> 
-    let! res = app
-    return Some res
+  | true -> return! app request
   | _ -> return None
 }
   

@@ -10,8 +10,8 @@ type HttpResponse = {
   StatusCode : StatusCode
 }
 
-let response statusCode content = async {
-  return {Content = content; StatusCode = statusCode}
+let response statusCode content (req : HttpRequest) = async {
+  return Some {Content = content; StatusCode = statusCode}
 }
 
 let OK = response Ok

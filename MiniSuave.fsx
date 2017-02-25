@@ -28,7 +28,7 @@ let httpMethodFilter iff app request : Async<HttpResponse option> = async {
   | _ -> return None
 }
 
-let SetHeader app key value request = async {
+let SetHeader key value app request = async {
   let! res = app request
   match res with
   | Some r -> 

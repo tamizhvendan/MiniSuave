@@ -17,18 +17,20 @@ let response statusCode content = async {
 let OK = response Ok
 let NOT_FOUND = response NotFound
 let INTERNAL_ERROR = response InternalError
-let httpMethodFilter httpMethod (app : Async<HttpResponse>) request =
+let httpMethodFilter httpMethod (app : Async<HttpResponse>) request = async {
   match request.HttpMethod = httpMethod with
-  | true -> Some app
-  | _ -> None
+  | true -> 
+    let! res = app
+    return Some res
+  | _ -> return None
+}
+  
 let GET = httpMethodFilter Get
 let POST = httpMethodFilter Post  
 let PUT = httpMethodFilter Put 
   
 let execute app req = 
-  match app req with
-  | Some res -> 
-    res 
-    |> Async.RunSynchronously
-    |> printfn "%A"
+  let res = app req |> Async.RunSynchronously
+  match res with
+  | Some r -> printfn "%A" r
   | None -> printfn "No response found"

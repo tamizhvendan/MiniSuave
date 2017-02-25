@@ -17,14 +17,18 @@ let response statusCode content = async {
 let OK = response Ok
 let NOT_FOUND = response NotFound
 let INTERNAL_ERROR = response InternalError
-
-let filter f app request = 
-  match f request with
-  | true -> Some app
-  | _ -> None
-let GET = (fun request -> request.HttpMethod = Get)
-let PUT = (fun request -> request.HttpMethod = Put)
-let POST = (fun request -> request.HttpMethod = Post)
+let GET app request = 
+  match request.HttpMethod with
+  | Get -> Some app  
+  | _ -> None  
+let POST app request = 
+  match request.HttpMethod with
+  | Post -> Some app  
+  | _ -> None  
+let PUT app request = 
+  match request.HttpMethod with
+  | Put -> Some app  
+  | _ -> None  
 let execute app req = 
   match app req with
   | Some res -> 

@@ -14,10 +14,13 @@ type HttpResponse = {
 }
 
 type Handler = HttpRequest -> Async<HttpResponse option>
+
 let response statusCode content (req : HttpRequest)  = async {
   // TODO : Handle Headers 
+  printfn "preparing response"
   return Some {Content = content; StatusCode = statusCode; Headers = []}
 }
+
 
 let OK = response Ok
 let NOT_FOUND = response NotFound
@@ -40,6 +43,16 @@ let GET = httpMethodFilter (fun request -> request.HttpMethod = Get)
 let POST = httpMethodFilter (fun request -> request.HttpMethod = Post)  
 let PUT = httpMethodFilter (fun request -> request.HttpMethod = Put) 
 let Path path  = httpMethodFilter (fun request -> request.Path = path)  
+
+let rec Choose handlers req = async {
+  match handlers with
+  | [] -> return None
+  | x :: xs ->
+    let! res = x req
+    match res with
+    | Some r -> return Some r
+    | _ -> return! Choose xs req
+}
 
 let execute (app : Handler) req = 
   let res = app req |> Async.RunSynchronously

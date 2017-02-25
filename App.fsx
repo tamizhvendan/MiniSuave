@@ -1,11 +1,12 @@
 #load "MiniSuave.fsx"
 open MiniSuave
 
-let myApp = 
-  SetHeader "Content-Type" "text/plain" (Path "/hello" (GET (OK "Hello GET")))
-
-let myNewApp =
-  OK "Hello GET"
-  |> GET
-  |> Path "/hello"
+let hello = 
+  Path "/hello" (GET (OK "Hello headers"))
   |> SetHeader "Content-Type" "text/plain"
+
+let hi =
+  Path "/hi" (GET (OK "Hi"))
+
+let myApp = 
+  Choose [hi; hello]
